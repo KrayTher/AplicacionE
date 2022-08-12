@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
+using BL.Models;
 namespace AplicacionE.Models
 {
     public partial class EjemploContext : DbContext
@@ -23,11 +23,13 @@ namespace AplicacionE.Models
         /// </summary>
         public virtual DbSet<Alumno> Alumnos { get; set; } = null!;
         public virtual DbSet<Materia> Materias { get; set; } = null!;
+
+        public virtual DbSet<UserInfo>? UserInfos { get; set; } = null;
         /// <summary>
         /// Configuracion de coneccion
         /// </summary>
         /// <param name="optionsBuilder"></param>
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -55,8 +57,21 @@ namespace AplicacionE.Models
                     .HasForeignKey(d => d.MateriaId);
             });
 
+            modelBuilder.Entity<UserInfo>(entity =>
+            {
+                entity.HasNoKey();
+                entity.ToTable("UserInfo");
+                entity.Property(e => e.UserId).HasColumnName("UserId");
+                entity.Property(e => e.DisplayName).HasMaxLength(60).IsUnicode(false);
+                entity.Property(e => e.UserName).HasMaxLength(30).IsUnicode(false);
+                entity.Property(e => e.Email).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Password).HasMaxLength(20).IsUnicode(false);
+                entity.Property(e => e.CreatedDate).IsUnicode(false);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

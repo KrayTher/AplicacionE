@@ -1,4 +1,4 @@
-﻿namespace AplicacionE.Models
+﻿namespace BL.Models
 {
     public class Paginacion<T> where T : class
     {
